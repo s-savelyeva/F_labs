@@ -76,24 +76,32 @@ let randTree tree =
             createRand node count (acc+1)
     createRand tree count 0
 
+let replace(x) = 
+    if x < 0.0 then
+        0.0
+    else
+        1.0
+
 // Функция для замены значений в дереве
-let rec replaceValues tree =
+let rec map func tree =
     match tree with
     | Empty -> Empty
     | Node (value, left, right) ->
-        let newValue = 
-            if value < 0.0 then
-                0.0
-            else 
-                1.0
-        Node (newValue, replaceValues left, replaceValues right)
+        let newValue = func value
+        Node (newValue, map func left, map func right)
     
-let rec countElements tree digit =
+let contain x digit =
+    if x.ToString().Contains(digit.ToString()) then
+        1
+    else
+        0
+
+let rec Fold contain x digit acc tree =
     match tree with
-    | Empty -> 0
+    | Empty -> acc
     | Node (value, left, right) ->
-        let countAcc = if value.ToString().Contains(digit.ToString()) then 1 else 0
-        countAcc + (countElements left digit) + (countElements right digit)
+        let countAcc = contain value digit
+        countAcc + (Fold contain value digit acc left) + (Fold contain value digit acc right)
 
 let rec check_digit() =
     let digit = int(check_input_int())
@@ -117,7 +125,7 @@ let rec task1() =
     printfn "Исходное дерево:"
     printTree tree 0
 
-    let resultTree = replaceValues tree
+    let resultTree = map replace tree
     printfn "После замены:"
     printTree resultTree 0
     Empty
@@ -139,7 +147,7 @@ let task2() =
     printf "Введите цифру = "
     let digit = check_digit()
 
-    let result = countElements tree digit
+    let result = Fold contain 0 digit 0 tree
     printfn "Количество = %d" result
 
 
