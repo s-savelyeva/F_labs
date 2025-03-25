@@ -18,6 +18,12 @@ check2(N, true, Ans) :-
     check(N, Ans).
 check2(N, false, Ans) :-
     not(check(N, Ans)).
+
+% Предикат для построчного вывода списка
+print_list([]).     % База рекурсии: пустой список ничего не выводит
+print_list([Head|Tail]) :-
+    writeln(Head),   % Вывести первый элемент списка
+    print_list(Tail). % Рекурсивно обработать остальные элементы
  
 solve(Ans, Solve) :-
     %Генерация всех возможных вариантов котят и их цветов
@@ -34,4 +40,6 @@ solve(Ans, Solve) :-
     check2(2, I2, Solve),
     check2(3, I3, Solve),
     check2(4, I4, Solve),
-    check2(5, I5, Solve).
+    check2(5, I5, Solve),
+    writeln("Ответ на задачу: "),
+    print_list(Solve).
